@@ -38,3 +38,12 @@ tasks:
     - task: registry:build
     - cargo build --release
     - task: book:build
+
+  publish:
+    vars:
+      VERSION:
+        sh: grep version packages/cli/Cargo.toml | head -n1 | sed 's/^version = //' | tr -d '"'
+    cmds:
+      - git tag v{{.VERSION}}
+      - git push origin v{{.VERSION}}
+      - cargo publish
