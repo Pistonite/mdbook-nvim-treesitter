@@ -39,5 +39,10 @@ jobs:
           pre-task: test
           # ensure the example book builds
           post-task: exec -- book:build
+      - uses: actions/upload-pages-artifact@v5
+        if: runner.os == 'Linux' && runner.arch == 'X64'
+        with:
+          path: packages/example-book/book
+          retention-days: 3
     
 
