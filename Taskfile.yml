@@ -44,6 +44,7 @@ tasks:
       VERSION:
         sh: grep version packages/cli/Cargo.toml | head -n1 | sed 's/^version = //' | tr -d '"'
     cmds:
+      - task: registry:build
       - git tag v{{.VERSION}}
       - git push origin v{{.VERSION}}
-      - cargo publish
+      - cargo publish -p mdbook-nvim-treesitter --allow-dirty
