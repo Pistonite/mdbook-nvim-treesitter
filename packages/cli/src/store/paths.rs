@@ -2,6 +2,7 @@
 
 use std::path::{Path, PathBuf};
 
+#[allow(unused)] // windows
 use cu::pre::*;
 
 /// The current user's home directory.

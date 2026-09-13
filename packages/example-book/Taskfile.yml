@@ -6,8 +6,11 @@ tasks:
     - cargo run -p mdbook-nvim-treesitter -- css > theme/tree-sitter.css
 
   build:
+    - task: install
     - rm -rf book
     - mdbook build
 
   dev:
+    - task: install
+    - rm -rf book
     - shwoop book -w src -w ../cli --host -- mdbook build

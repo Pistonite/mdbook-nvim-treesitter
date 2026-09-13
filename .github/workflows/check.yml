@@ -1,6 +1,6 @@
 name: check
 on:
-  push:
+  pull_request:
     branches:
       - main
 jobs:
@@ -11,4 +11,5 @@ jobs:
       - uses: Pistonight/mono-dev/actions/setup@main
         with:
           rust: stable
-      - task check
+          tool-cargo-binstall: layered-crate
+      - run: task check

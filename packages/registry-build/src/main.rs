@@ -61,16 +61,16 @@ fn main(args: Cli) -> cu::Result<()> {
             let parsers = cu::check!(
                 fetch::get_remote(
                     &metadata.nvim_treesitter.paths.parsers,
-                    &repository,
-                    &revision
+                    repository,
+                    revision
                 ),
                 "failed to fetch nvim-treesitter parsers file"
             )?;
             let filetypes = cu::check!(
                 fetch::get_remote(
                     &metadata.nvim_treesitter.paths.filetypes,
-                    &repository,
-                    &revision
+                    repository,
+                    revision
                 ),
                 "failed to fetch nvim-treesitter filetypes file"
             )?;

@@ -46,9 +46,7 @@ impl LocalCache {
     pub fn install_parser(&self, language: &str, from: &Path) -> cu::Result<PathBuf> {
         let to = self.parser_path(language);
         cu::fs::make_dir(to.parent().expect("parser path has a parent"))?;
-        // A parser may be loaded by another process; replacing the file is
-        // fine, but writing through it is not, so remove first.
-        let _ = cu::fs::remove(&to);
+        displace(&to);
         cu::check!(
             cu::fs::copy(from, &to),
             "failed to install the {language} parser"
@@ -74,6 +72,34 @@ impl LocalCache {
         }
 
         Ok(to)
+    }
+}
+
+/// Get an existing parser out of the way, so a fresh one can be copied over it.
+///
+/// A concurrent build may have this `.so` loaded. On Unix unlinking it is
+/// enough: the mapping keeps the inode alive until that process exits. On
+/// Windows a mapped file can be neither deleted nor overwritten -- but it
+/// *can* be renamed, and a delete after the rename is deferred until the last
+/// handle closes. So the fallback moves it aside and asks for it to go when it
+/// can. This is the dance nvim-treesitter's own installer does.
+///
+/// Every step is best effort: nothing here is worth failing a build over, and
+/// if the copy afterwards cannot proceed it reports the real error itself.
+fn displace(path: &Path) {
+    if cu::fs::remove(path).is_ok() || !path.exists() {
+        return;
+    }
+
+    // Unique per attempt: a second displacement in the same process must not
+    // land on a name the first one left behind, still waiting to be deleted.
+    static ATTEMPT: std::sync::atomic::AtomicU32 = std::sync::atomic::AtomicU32::new(0);
+    let attempt = ATTEMPT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+
+    let name = path.file_name().unwrap_or_default().to_string_lossy();
+    let aside = path.with_file_name(format!("{name}.{}-{attempt}.old", std::process::id()));
+    if cu::fs::rename(path, &aside).is_ok() {
+        let _ = cu::fs::remove(&aside);
     }
 }
 
@@ -121,6 +147,22 @@ mod tests {
             cu::fs::read_string(cache.parser_path("rust")).unwrap(),
             "second"
         );
+    }
+
+    #[test]
+    fn a_parser_that_cannot_be_removed_is_moved_aside_instead() {
+        // The Windows case, reachable here only in its shape: `displace` has
+        // to leave the path free either way, and must not fail if it cannot.
+        let dir = temp_dir("displace");
+        cu::fs::make_dir(&dir).unwrap();
+        let path = dir.join("rust.so");
+        cu::fs::write(&path, "loaded elsewhere").unwrap();
+
+        displace(&path);
+        assert!(!path.exists(), "the path must be free for the new parser");
+
+        // And on something that was never there.
+        displace(&dir.join("never-existed.so"));
     }
 
     #[test]

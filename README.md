@@ -20,18 +20,30 @@ Quality: Slop - other than code organized in layers by me and the meta build scr
 
 ## Quick start
 
+Install the preprocessor either from pre-built binary or from source:
 ```console
+# Install from GitHub release with cargo-binstall
+$ cargo binstall mdbook-nvim-treesitter
+# .. Or Install from source
 $ cargo install mdbook-nvim-treesitter
+
+# Generate the default stylesheet
 $ mdbook-nvim-treesitter css > theme/tree-sitter.css
 ```
+
+Add configuration to `book.toml`
 
 ```toml
 # book.toml
 [preprocessor.nvim-treesitter]
 
-# book.toml
 [output.html]
 additional-css = ["theme/tree-sitter.css"]
+```
+
+Build the book
+```console
+$ mdbook build
 ```
 
 The first build clones and compiles the grammars it needs, which takes a
