@@ -1,0 +1,16 @@
+[book]
+title = "mdbook-nvim-treesitter"
+authors = ["Pistonight"]
+language = "en"
+src = "src"
+
+[preprocessor.nvim-treesitter]
+command = "cargo run -p mdbook-nvim-treesitter"
+# Everything nvim-treesitter supports is highlighted by default. `include`
+# narrows that to a list; `exclude` removes languages from it.
+exclude = []
+cache_dir = ".cache"
+
+[output.html]
+additional-css = ["theme/tree-sitter.css"]
+default-theme = "light"

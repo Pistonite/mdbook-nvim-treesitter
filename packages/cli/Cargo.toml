@@ -1,0 +1,23 @@
+[package]
+name = "mdbook-nvim-treesitter"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+repository = "https://github.com/Pistonite/mdbook-nvim-treesitter"
+description = "An mdBook preprocessor that highlights code with nvim-treesitter queries"
+
+[dependencies]
+cu = { workspace = true, features = ["cli", "fs", "json", "process", "toml"] }
+serde.workspace = true
+ureq.workspace = true
+flate2.workspace = true
+
+# mdbook dependencies
+mdbook-preprocessor.workspace = true
+mdbook-markdown.workspace = true
+
+# ts runtime dependencies
+libloading.workspace = true
+tree-sitter.workspace = true
+tree-sitter-language.workspace = true
+regex.workspace = true

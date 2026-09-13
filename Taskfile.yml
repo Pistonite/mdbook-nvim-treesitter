@@ -1,0 +1,40 @@
+version: '3'
+
+includes:
+  common:
+    taskfile: mono-dev/task/common.yaml
+    optional: true
+    flatten: true
+
+  cli:      { taskfile: packages/cli,            dir: packages/cli,            internal: true }
+  registry: { taskfile: packages/registry-build, dir: packages/registry-build, internal: true }
+  book:     { taskfile: packages/example-book,   dir: packages/example-book,   internal: true }
+
+tasks:
+  install:
+    - rm -rf mono-dev
+    - git clone https://github.com/Pistonight/mono-dev --depth 1
+
+  check:
+    - task: registry:build
+    - task: registry:check
+    - task: cli:check
+
+  fix:
+    - cargo fmt
+
+  # Unit tests only. These need no network and no compiler toolchain, once the
+  # generated modules exist.
+  test:
+    - task: registry:build
+    - cargo test --workspace
+
+  # Everything, including the tests that download and build real grammars.
+  test-all:
+    - task: registry:build
+    - cargo test --workspace -- --include-ignored --test-threads=1
+
+  build:
+    - task: registry:build
+    - cargo build
+    - task: book:build

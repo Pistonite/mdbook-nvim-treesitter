@@ -1,0 +1,27 @@
+{
+  "//": [
+    "Everything this build pins. This file is the single source of truth:",
+    "every constant derived from it is generated into",
+    "packages/registry/src/gen_/pin.gen.rs, and the nvim-treesitter revision",
+    "below also selects the parser table generated into db.gen.rs.",
+    "",
+    "After editing, run `task codegen`.",
+    "",
+    "tree_sitter.cli_version must stay in step with the `tree-sitter` runtime",
+    "dependency in the workspace Cargo.toml: the CLI decides the ABI version of",
+    "every parser we compile, the runtime decides which ABI versions it can",
+    "load. A unit test in this crate asserts the two agree."
+  ],
+  "nvim_treesitter": {
+    "repository": "https://github.com/nvim-treesitter/nvim-treesitter",
+    "revision": "9a168f6357ed21c3a636e1727bc7d382abc451b8",
+    "paths": {
+      "parsers": "lua/nvim-treesitter/parsers.lua",
+      "filetypes": "plugin/filetypes.lua",
+      "queries": "runtime/queries"
+    }
+  },
+  "tree_sitter": {
+    "repository": "https://github.com/tree-sitter/tree-sitter"
+  }
+}

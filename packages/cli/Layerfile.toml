@@ -1,0 +1,16 @@
+[crate]
+
+[layer.driver]
+depends-on = ["registry", "query", "store", "renderer", "highlight"]
+
+[layer.renderer]
+depends-on = ["registry", "highlight"]
+
+[layer.store]
+depends-on = ["registry"]
+
+[layer.highlight]
+depends-on = ["registry", "query"]
+
+[layer.query]
+[layer.registry]

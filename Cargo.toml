@@ -1,0 +1,33 @@
+[workspace]
+resolver = "2"
+members = [
+    # "packages/cli-old",
+    "packages/cli",
+    "packages/registry-build",
+    # "packages/renderer",
+    # "packages/runtime",
+    # "packages/store",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+repository = "https://github.com/Pistonight/mdbook-nvim-treesitter"
+
+[workspace.dependencies.cu]
+package = "pistonite-cu"
+version = "0.9.3"
+
+[workspace.dependencies]
+flate2 = "1.1.9"
+full_moon = { version = "2.2.0", default-features = false }
+libloading = "0.8.9"
+mdbook-markdown = "0.5.4"
+mdbook-preprocessor = "0.5.4"
+# pulldown-cmark = { version = "0.13.4", default-features = false }
+regex = "1.13.1"
+serde = "1"
+tree-sitter = "0.27.0"
+tree-sitter-language = "0.1.8"
+ureq = "3.4.1"

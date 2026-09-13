@@ -1,0 +1,13 @@
+version: '3'
+
+tasks:
+  install:
+    - mkdir -p theme
+    - cargo run -p mdbook-nvim-treesitter -- css > theme/tree-sitter.css
+
+  build:
+    - rm -rf book
+    - mdbook build
+
+  dev:
+    - shwoop book -w src -w ../cli --host -- mdbook build

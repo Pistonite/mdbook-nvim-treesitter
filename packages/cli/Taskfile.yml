@@ -1,0 +1,17 @@
+version: '3'
+
+includes:
+  cargo:
+    taskfile: ../../mono-dev/task/cargo.yaml
+    internal: true
+    optional: true
+
+tasks:
+  check:
+    - task: cargo:clippy-all
+    - task: cargo:fmt-check
+    - task: check-layer
+  fix:
+    - task: cargo:fmt-fix
+  check-layer:
+    - layered-crate

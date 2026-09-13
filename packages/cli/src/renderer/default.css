@@ -1,0 +1,199 @@
+/*
+ * Default theme for mdbook-nvim-treesitter.
+ *
+ * Dump a copy with `mdbook-nvim-treesitter css > theme/tree-sitter.css` and add
+ * it to `output.html.additional-css` in book.toml.
+ *
+ * Three layers, so retheming stays cheap:
+ *
+ *   1. a palette of named colours          --ts-blue, --ts-green, ...
+ *   2. roles bound to palette entries      --ts-keyword: var(--ts-blue)
+ *   3. highlight classes bound to roles    .ts-keyword { color: var(--ts-keyword) }
+ *
+ * Change a palette entry to recolour everything that uses it; change a role to
+ * recolour one kind of token. Only reach for layer 3 to restyle a single
+ * highlight.
+ *
+ * Highlight classes nest: a `@keyword.function` capture emits
+ * `class="ts-keyword ts-keyword-function"`, so it picks up the general rule
+ * unless a more specific one follows it. All of these selectors have the same
+ * specificity, so the *later* rule wins -- keep general rules above specific
+ * ones when editing.
+ */
+
+/* ------------------------------------------------------------------ *
+ * 1. Palette -- VS Code Light+
+ * ------------------------------------------------------------------ */
+
+:root {
+  --ts-fg: #24292e;
+  --ts-blue: #0000ff;
+  --ts-purple: #af00db;
+  --ts-green: #008000;
+  --ts-red: #a31515;
+  --ts-teal: #098658;
+  --ts-gold: #795e26;
+  --ts-cyan: #267f99;
+  --ts-navy: #001080;
+  --ts-azure: #0070c1;
+  --ts-grey: #6a737d;
+  --ts-maroon: #811f3f;
+  --ts-orange: #b35900;
+  --ts-crimson: #cd3131;
+}
+
+/* VS Code Dark+, for mdBook's dark themes. */
+html.coal,
+html.navy,
+html.ayu {
+  --ts-fg: #d4d4d4;
+  --ts-blue: #569cd6;
+  --ts-purple: #c586c0;
+  --ts-green: #6a9955;
+  --ts-red: #ce9178;
+  --ts-teal: #b5cea8;
+  --ts-gold: #dcdcaa;
+  --ts-cyan: #4ec9b0;
+  --ts-navy: #9cdcfe;
+  --ts-azure: #4fc1ff;
+  --ts-grey: #808080;
+  --ts-maroon: #d16969;
+  --ts-orange: #d7ba7d;
+  --ts-crimson: #f44747;
+}
+
+/* ------------------------------------------------------------------ *
+ * 2. Roles
+ * ------------------------------------------------------------------ */
+
+:root {
+  --ts-text: var(--ts-fg);
+  --ts-keyword: var(--ts-blue);
+  --ts-control: var(--ts-purple);
+  --ts-comment: var(--ts-green);
+  --ts-string: var(--ts-red);
+  --ts-escape: var(--ts-orange);
+  --ts-regexp: var(--ts-maroon);
+  --ts-number: var(--ts-teal);
+  --ts-function: var(--ts-gold);
+  --ts-type: var(--ts-cyan);
+  --ts-variable: var(--ts-navy);
+  --ts-constant: var(--ts-azure);
+  --ts-member: var(--ts-navy);
+  --ts-operator: var(--ts-fg);
+  --ts-punctuation: var(--ts-grey);
+  --ts-tag: var(--ts-blue);
+  --ts-attribute: var(--ts-navy);
+  --ts-error: var(--ts-crimson);
+  --ts-diff-add: var(--ts-green);
+  --ts-diff-delete: var(--ts-crimson);
+  --ts-diff-change: var(--ts-azure);
+}
+
+/* ------------------------------------------------------------------ *
+ * 3. Highlights
+ * ------------------------------------------------------------------ */
+
+.tree-sitter-code,
+.tree-sitter-inline {
+  color: var(--ts-text);
+}
+
+/* Identifiers */
+.ts-variable { color: var(--ts-variable); }
+.ts-variable-builtin { color: var(--ts-keyword); font-style: italic; }
+.ts-variable-parameter { color: var(--ts-variable); }
+.ts-variable-member { color: var(--ts-member); }
+.ts-constant { color: var(--ts-constant); }
+.ts-constant-builtin { color: var(--ts-keyword); }
+.ts-constant-macro { color: var(--ts-constant); }
+.ts-module { color: var(--ts-type); }
+.ts-label { color: var(--ts-azure); }
+.ts-property { color: var(--ts-member); }
+.ts-field { color: var(--ts-member); }
+
+/* Literals */
+.ts-string { color: var(--ts-string); }
+.ts-string-documentation { color: var(--ts-comment); }
+.ts-string-regexp { color: var(--ts-regexp); }
+.ts-string-escape { color: var(--ts-escape); }
+.ts-string-special { color: var(--ts-escape); }
+.ts-string-special-url { color: var(--ts-azure); text-decoration: underline; }
+.ts-character { color: var(--ts-string); }
+.ts-character-special { color: var(--ts-escape); }
+.ts-boolean { color: var(--ts-keyword); }
+.ts-number { color: var(--ts-number); }
+.ts-number-float { color: var(--ts-number); }
+
+/* Types */
+.ts-type { color: var(--ts-type); }
+.ts-type-builtin { color: var(--ts-keyword); }
+.ts-type-definition { color: var(--ts-type); }
+.ts-attribute { color: var(--ts-attribute); }
+.ts-constructor { color: var(--ts-type); }
+
+/* Functions */
+.ts-function { color: var(--ts-function); }
+.ts-function-builtin { color: var(--ts-function); }
+.ts-function-call { color: var(--ts-function); }
+.ts-function-macro { color: var(--ts-function); }
+.ts-function-method { color: var(--ts-function); }
+.ts-operator { color: var(--ts-operator); }
+
+/* Keywords */
+.ts-keyword { color: var(--ts-keyword); }
+.ts-keyword-coroutine { color: var(--ts-control); }
+.ts-keyword-function { color: var(--ts-keyword); }
+.ts-keyword-operator { color: var(--ts-keyword); }
+.ts-keyword-import { color: var(--ts-control); }
+.ts-keyword-type { color: var(--ts-keyword); }
+.ts-keyword-modifier { color: var(--ts-keyword); }
+.ts-keyword-repeat { color: var(--ts-control); }
+.ts-keyword-return { color: var(--ts-control); }
+.ts-keyword-debug { color: var(--ts-control); }
+.ts-keyword-exception { color: var(--ts-control); }
+.ts-keyword-conditional { color: var(--ts-control); }
+.ts-keyword-directive { color: var(--ts-control); }
+
+/* Punctuation */
+.ts-punctuation { color: var(--ts-punctuation); }
+.ts-punctuation-delimiter { color: var(--ts-punctuation); }
+.ts-punctuation-bracket { color: var(--ts-punctuation); }
+.ts-punctuation-special { color: var(--ts-escape); }
+
+/* Comments */
+.ts-comment { color: var(--ts-comment); font-style: italic; }
+.ts-comment-documentation { color: var(--ts-comment); }
+.ts-comment-error { color: var(--ts-error); font-weight: bold; }
+.ts-comment-warning { color: var(--ts-orange); font-weight: bold; }
+.ts-comment-todo { color: var(--ts-azure); font-weight: bold; }
+.ts-comment-note { color: var(--ts-azure); font-weight: bold; }
+
+/* Markup, for markdown and friends */
+.ts-markup { color: var(--ts-text); }
+.ts-markup-strong { font-weight: bold; }
+.ts-markup-italic { font-style: italic; }
+.ts-markup-strikethrough { text-decoration: line-through; }
+.ts-markup-underline { text-decoration: underline; }
+.ts-markup-heading { color: var(--ts-keyword); font-weight: bold; }
+.ts-markup-quote { color: var(--ts-comment); font-style: italic; }
+.ts-markup-math { color: var(--ts-number); }
+.ts-markup-link { color: var(--ts-azure); }
+.ts-markup-link-url { color: var(--ts-azure); text-decoration: underline; }
+.ts-markup-raw { color: var(--ts-string); }
+.ts-markup-list { color: var(--ts-punctuation); }
+
+/* Tags, for HTML-like languages */
+.ts-tag { color: var(--ts-tag); }
+.ts-tag-builtin { color: var(--ts-tag); }
+.ts-tag-attribute { color: var(--ts-attribute); }
+.ts-tag-delimiter { color: var(--ts-punctuation); }
+
+/* Diffs */
+.ts-diff-plus { color: var(--ts-diff-add); }
+.ts-diff-minus { color: var(--ts-diff-delete); }
+.ts-diff-delta { color: var(--ts-diff-change); }
+
+/* Parse errors. Left unstyled by default: a code sample that a grammar cannot
+ * fully parse should still read normally rather than turn red. */
+.ts-error { color: inherit; }

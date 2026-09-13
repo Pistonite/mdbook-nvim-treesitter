@@ -1,0 +1,16 @@
+[package]
+name = "mdbook-nvim-treesitter-registry-build"
+version = "0.0.0"
+edition = "2024"
+license = "MIT"
+description = "Code generator for the pinned nvim-treesitter language registry"
+publish = false
+
+# Deliberately does NOT depend on `registry`: this tool generates `registry`'s
+# source, so a dependency on it would mean `registry` had to compile before it
+# could be generated.
+[dependencies]
+cu = { workspace = true, features = ["cli", "fs", "json", "toml"] }
+full_moon = { workspace = true }
+serde = { workspace = true }
+ureq = { workspace = true }
