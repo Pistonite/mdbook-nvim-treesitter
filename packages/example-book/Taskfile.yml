@@ -11,4 +11,6 @@ tasks:
     - mdbook build
 
   dev:
+    - task: install
+    - rm -rf book
     - shwoop book -w src -w ../cli --host -- mdbook build
