@@ -11,4 +11,5 @@ jobs:
       - uses: Pistonight/mono-dev/actions/setup@main
         with:
           rust: stable
+          tool-cargo-binstall: layered-crate
       - run: task check
