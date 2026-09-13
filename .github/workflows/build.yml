@@ -1,0 +1,43 @@
+name: build
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image: blacksmith-4vcpu-ubuntu-2404
+            target: x64
+          - image: blacksmith-4vcpu-ubuntu-2404-arm
+            target: arm64
+          - image: blacksmith-6vcpu-macos-latest
+            target: arm64
+          - image: blacksmith-4vcpu-windows-2025
+            target: x64
+          # if needed: blacksmith currently doesn't have windows runners
+          # - image: windows-11-arm
+          #  target: arm64
+    runs-on: ${{ matrix.image }}
+    steps:
+      - uses: Pistonight/mono-dev/actions/setup@main
+        with:
+          rust: stable
+          rust-native: ${{ matrix.target }}
+          tool-mdbook: true
+      - uses: Pistonight/mono-dev/actions/rust-xplat@main
+        with:
+          arch: ${{ matrix.target }}
+          binary: mdbook-nvim-treesitter
+         
+          pre-task: test
+          # ensure the example book builds
+          post-task: exec -- book:build
+    
+

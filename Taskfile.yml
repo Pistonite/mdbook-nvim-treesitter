@@ -36,5 +36,5 @@ tasks:
 
   build:
     - task: registry:build
-    - cargo build
+    - cargo build --release
     - task: book:build

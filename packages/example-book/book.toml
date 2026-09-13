@@ -5,7 +5,7 @@ language = "en"
 src = "src"
 
 [preprocessor.nvim-treesitter]
-command = "cargo run -p mdbook-nvim-treesitter"
+command = "cargo run -p mdbook-nvim-treesitter --release --"
 # Everything nvim-treesitter supports is highlighted by default. `include`
 # narrows that to a list; `exclude` removes languages from it.
 exclude = []
