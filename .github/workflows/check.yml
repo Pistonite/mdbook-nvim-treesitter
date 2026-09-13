@@ -11,4 +11,4 @@ jobs:
       - uses: Pistonight/mono-dev/actions/setup@main
         with:
           rust: stable
-      - task check
+      - run: task check
