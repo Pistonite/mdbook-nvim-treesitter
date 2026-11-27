@@ -84,7 +84,9 @@ impl Overrides {
     ///
     /// A marker applies to the first non-whitespace character after it. If
     /// that character sits inside a longer span, the span is split so only the
-    /// part from there on is retagged.
+    /// part from there on is retagged. The marker replaces the whole stack:
+    /// the author has said what the code is, so nothing the queries found is
+    /// left underneath.
     pub fn apply<'a>(&'a self, spans: Vec<Span<'a>>) -> Vec<Span<'a>> {
         if self.marks.is_empty() {
             return spans;
@@ -101,7 +103,7 @@ impl Overrides {
 
             let span = &mut spans[index];
             if span.range.start == target {
-                span.group = Some(&mark.group);
+                span.groups = vec![&mark.group];
                 continue;
             }
 
@@ -111,7 +113,7 @@ impl Overrides {
                 index + 1,
                 Span {
                     range: tail,
-                    group: Some(&mark.group),
+                    groups: vec![&mark.group],
                 },
             );
         }
@@ -188,13 +190,16 @@ mod tests {
     use super::strip_overrides as strip;
 
     fn span(range: Range<usize>, group: Option<&str>) -> Span<'_> {
-        Span { range, group }
+        Span {
+            range,
+            groups: group.into_iter().collect(),
+        }
     }
 
     fn shape<'a>(code: &'a str, spans: &'a [Span<'a>]) -> Vec<(&'a str, Option<&'a str>)> {
         spans
             .iter()
-            .map(|span| (&code[span.range.clone()], span.group))
+            .map(|span| (&code[span.range.clone()], span.group()))
             .collect()
     }
 

@@ -54,7 +54,7 @@ fn group_of(
         .spans
         .into_iter()
         .filter(|span| span.range.start < wanted.end && wanted.start < span.range.end)
-        .map(|span| span.group.map(str::to_string))
+        .map(|span| span.group().map(str::to_string))
         .collect()
 }
 
@@ -164,7 +164,7 @@ fn a_missing_injected_language_is_reported_not_fatal() {
         highlighted.missing
     );
     // The HTML around it is still highlighted.
-    assert!(highlighted.spans.iter().any(|s| s.group.is_some()));
+    assert!(highlighted.spans.iter().any(|s| !s.groups.is_empty()));
 }
 
 #[test]
@@ -173,7 +173,7 @@ fn an_unloaded_language_yields_plain_text() {
     let highlighter = highlighter(&[]);
     let highlighted = highlighter.highlight("rust", "fn main() {}").unwrap();
 
-    assert!(highlighted.spans.iter().all(|s| s.group.is_none()));
+    assert!(highlighted.spans.iter().all(|s| s.groups.is_empty()));
     assert!(highlighted.missing.contains("rust"));
 }
 

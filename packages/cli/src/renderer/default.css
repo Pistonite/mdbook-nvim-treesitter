@@ -125,6 +125,12 @@ html.ayu {
 .ts-number { color: var(--ts-number); }
 .ts-number-float { color: var(--ts-number); }
 
+/* Regexp */
+.ts-string-regexp > span.ts-punctuation { color: var(--ts-regexp); }
+.ts-string-regexp > span.ts-punctuation-bracket { color: var(--ts-string); }
+.ts-string-regexp > span.ts-operator { color: var(--ts-string); }
+.ts-string-regexp > span { color: var(--ts-regexp); }
+
 /* Types */
 .ts-type { color: var(--ts-type); }
 .ts-type-builtin { color: var(--ts-keyword); }
