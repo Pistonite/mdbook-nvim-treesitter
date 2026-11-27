@@ -7,6 +7,14 @@
 //! group and the specific kind to target, and reproduces Neovim's rule that an
 //! unstyled `@keyword.function` falls back to `@keyword`.
 //!
+//! Where several highlights cover the same text, they become nested
+//! `<span>`s, the bottom of the stack outermost. Whatever the inner group's
+//! rules leave unstyled is inherited from the outer one -- Neovim's rule that
+//! overlapping highlights combine -- so a regex keeps its `@string.regexp`
+//! colour where the injected regex grammar's captures do not set one. Putting
+//! every class on one element would not do: which rule won would then be up to
+//! the order of the stylesheet, not the order of the stack.
+//!
 //! The output is always a *single line*, with newlines written as `&#10;`.
 //! That matters because a code block may sit inside a list item or a block
 //! quote, where every physical line needs the container's prefix; keeping the
@@ -43,15 +51,14 @@ fn render(source: &str, spans: &[Span]) -> String {
         let Some(text) = source.get(span.range.clone()) else {
             continue;
         };
-        match span.group {
-            None => escape_into(text, &mut out),
-            Some(group) => {
-                out.push_str("<span class=\"");
-                out.push_str(&class_attribute(group));
-                out.push_str("\">");
-                escape_into(text, &mut out);
-                out.push_str("</span>");
-            }
+        for group in &span.groups {
+            out.push_str("<span class=\"");
+            out.push_str(&class_attribute(group));
+            out.push_str("\">");
+        }
+        escape_into(text, &mut out);
+        for _ in &span.groups {
+            out.push_str("</span>");
         }
     }
     out
@@ -128,7 +135,10 @@ mod tests {
     use super::*;
 
     fn span(range: std::ops::Range<usize>, group: Option<&str>) -> Span<'_> {
-        Span { range, group }
+        Span {
+            range,
+            groups: group.into_iter().collect(),
+        }
     }
 
     #[test]
@@ -160,6 +170,24 @@ mod tests {
         assert_eq!(
             render(source, &spans),
             "<span class=\"ts-keyword\">let</span> x"
+        );
+    }
+
+    #[test]
+    fn stacked_groups_nest_with_the_bottom_outermost() {
+        let source = "^a";
+        let spans = [
+            Span {
+                range: 0..1,
+                groups: vec!["string.regexp", "punctuation.delimiter"],
+            },
+            span(1..2, Some("string.regexp")),
+        ];
+        assert_eq!(
+            render(source, &spans),
+            "<span class=\"ts-string ts-string-regexp\">\
+             <span class=\"ts-punctuation ts-punctuation-delimiter\">^</span></span>\
+             <span class=\"ts-string ts-string-regexp\">a</span>"
         );
     }
 
