@@ -295,10 +295,10 @@ fn entries<'a>(
         .fields()
         .iter()
         .map(|field| match field {
-            Field::NameKey { key, value, .. } => Ok((key.token().to_string(), value)),
+            Field::NameKey { key, value, .. } => Ok((key.token().to_string(), &**value)),
             Field::ExpressionKey { key, value, .. } => {
                 let key = cu::check!(string(key), "{what} has a non-string bracketed key")?;
-                Ok((key, value))
+                Ok((key, &**value))
             }
             _ => cu::bail!("{what} has a field with no key"),
         })

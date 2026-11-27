@@ -11,7 +11,7 @@ version = "0.9.9"
 
 [workspace.dependencies]
 flate2 = "1.1.11"
-full_moon = { version = "2.2.0", default-features = false }
+full_moon = { version = "3.0.0", default-features = false }
 libloading = "0.9.1"
 mdbook-markdown = "0.5.4"
 mdbook-preprocessor = "0.5.4"
