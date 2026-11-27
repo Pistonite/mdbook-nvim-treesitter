@@ -5,16 +5,11 @@
     "packages/registry/src/gen_/pin.gen.rs, and the nvim-treesitter revision",
     "below also selects the parser table generated into db.gen.rs.",
     "",
-    "After editing, run `task codegen`.",
-    "",
-    "tree_sitter.cli_version must stay in step with the `tree-sitter` runtime",
-    "dependency in the workspace Cargo.toml: the CLI decides the ABI version of",
-    "every parser we compile, the runtime decides which ABI versions it can",
-    "load. A unit test in this crate asserts the two agree."
+    "After editing, run `task build`."
   ],
   "nvim_treesitter": {
     "repository": "https://github.com/nvim-treesitter/nvim-treesitter",
-    "revision": "9a168f6357ed21c3a636e1727bc7d382abc451b8",
+    "revision": "52773f0d13a0c11d0c3ef33c14ab6ecc1c17148b",
     "paths": {
       "parsers": "lua/nvim-treesitter/parsers.lua",
       "filetypes": "plugin/filetypes.lua",
